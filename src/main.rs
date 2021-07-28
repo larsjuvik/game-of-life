@@ -47,6 +47,13 @@ impl World2D {
         World2D { cells }
     }
 
+    fn get_cell(&self, grid_x: i32, grid_y: i32) -> Option<&Cell> {
+        match self.cells.get(grid_y as usize) {
+            Some(row) => row.get(grid_x as usize),
+            None => None,
+        }
+    }
+
     fn cells_x(&self) -> u32 { self.cells.get(0).unwrap().len() as u32 }
     fn cells_y(&self) -> u32 { self.cells.len() as u32 }
 }
@@ -124,6 +131,15 @@ async fn main() {
 mod tests {
 
     use super::*;
+
+    #[test]
+    fn test_get_cell_not_none() {
+        let grid = World2D::new(10, 10);
+        match grid.get_cell(0, 0) {
+            Some(_) => (),
+            None => panic!("Cell should not be 'None'."),
+        }
+    }
 
     #[test]
     fn grid_get_correct_number_cells() {
