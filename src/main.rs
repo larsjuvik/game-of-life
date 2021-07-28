@@ -63,6 +63,16 @@ impl World2D {
         World2D { cells }
     }
 
+    fn set_cell(&mut self, grid_x: i32, grid_y: i32, state: CellState) {
+        match self.cells.get_mut(grid_y as usize) {
+            Some(row) => match row.get_mut(grid_x as usize) {
+                Some(cell) => { cell.state = state; },
+                None => (),
+            },
+            None => (),
+        }
+    }
+
     fn get_cell(&self, grid_x: i32, grid_y: i32) -> Option<&Cell> {
         match self.cells.get(grid_y as usize) {
             Some(row) => row.get(grid_x as usize),
@@ -91,6 +101,24 @@ impl World2D {
         }
 
         counter
+    }
+
+    // performs one tick; applies the rules of Conway's Game of Life
+    fn tick(&mut self) {
+        let old_world = World2D { cells: self.cells.clone() };
+
+        for row in &old_world.cells {
+            for cell in row {
+                let neighbours = old_world.get_neighbours(cell.grid_x, cell.grid_y);
+
+                if cell.state == CellState::DEAD && neighbours == 3 {
+                    self.set_cell(cell.grid_x, cell.grid_y, CellState::ALIVE);
+                }
+                else if cell.state == CellState::ALIVE && !(neighbours == 2 || neighbours == 3) {
+                    self.set_cell(cell.grid_x, cell.grid_y, CellState::DEAD);
+                }
+            }
+        }
     }
 
     fn cells_x(&self) -> u32 { self.cells.get(0).unwrap().len() as u32 }
@@ -147,7 +175,7 @@ impl Draw for Cell {
 #[macroquad::main(config)]
 async fn main() {
 
-    let grid = World2D::new(10, 10);
+    let mut grid = World2D::new(10, 10);
 
     loop {
         clear_background(WHITE);
@@ -155,6 +183,7 @@ async fn main() {
         // input
         if is_key_pressed(KeyCode::Space) {
             println!("Space pressed!");
+            grid.tick();
         }
 
         grid.draw((HEIGHT as f32, WIDTH as f32));
