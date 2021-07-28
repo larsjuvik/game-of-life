@@ -32,10 +32,10 @@ impl World2D {
     fn new(cells_x: u32, cells_y: u32) -> World2D {
         let mut cells = Vec::new();
 
-        for y in 0..cells_y {
+        for y in 0..cells_y as i32 {
             let mut row = Vec::new();
 
-            for x in 0..cells_x {
+            for x in 0..cells_x as i32 {
                 let cell = match rand::gen_range::<u8>(0, 2) {
                     0 => Cell::new(x, y, CellState::ALIVE),
                     _ => Cell::new(x, y, CellState::DEAD),
@@ -73,12 +73,12 @@ enum CellState {
 }
 #[derive(Copy, Clone)]
 struct Cell {
-    grid_x: u32,
-    grid_y: u32,
+    grid_x: i32,
+    grid_y: i32,
     state: CellState,
 }
 impl Cell {
-    fn new(grid_x: u32, grid_y: u32, state: CellState) -> Cell {
+    fn new(grid_x: i32, grid_y: i32, state: CellState) -> Cell {
         Cell { grid_x, grid_y, state }
     }
 }
