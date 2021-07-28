@@ -66,10 +66,12 @@ impl Draw for Grid {
 /////////////////
 // CELL STUFF  //
 /////////////////
+#[derive(Copy, Clone)]
 enum CellState {
     DEAD,
     ALIVE,
 }
+#[derive(Copy, Clone)]
 struct Cell {
     grid_x: u32,
     grid_y: u32,
@@ -107,5 +109,39 @@ async fn main() {
         grid.draw((HEIGHT as f32, WIDTH as f32));
 
         next_frame().await
+    }
+}
+
+/////////////////
+// TESTS       //
+/////////////////
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn grid_get_correct_number_cells() {
+        let grid = Grid::new(10, 20);
+        assert_eq!(grid.cells_x(), 10);
+        assert_eq!(grid.cells_y(), 20);
+    }
+
+    #[test]
+    fn grid_get_correct_clone_cells() {
+        let dim = (20, 10);
+        let grid = Grid::new(dim.0, dim.1);
+        let cells_original = &grid.cells;
+        let cells_clone = &grid.cells.clone();
+
+        for y in 0..dim.1 as usize {
+            for x in 0..dim.0 as usize {
+                let cells_original = &cells_original.get(y).unwrap().get(x).unwrap();
+                let cells_clone = &cells_clone.get(y).unwrap().get(x).unwrap();
+
+                assert_eq!(cells_original.grid_x, cells_clone.grid_x);
+                assert_eq!(cells_original.grid_y, cells_clone.grid_y);
+            }
+        }
     }
 }
