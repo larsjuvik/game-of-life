@@ -29,6 +29,22 @@ struct World2D {
     cells: Vec<Vec<Cell>>,
 }
 impl World2D {
+
+    // for testing
+    fn all(size: u32, state: CellState) -> World2D {
+        let mut cells = Vec::new();
+
+        for y in 0..size as i32 {
+            let mut row = Vec::new();
+
+            for x in 0..size as i32 {
+                row.push(Cell::new(x, y, state));
+            }
+            cells.push(row);
+        }
+        World2D { cells }
+    }
+
     fn new(cells_x: u32, cells_y: u32) -> World2D {
         let mut cells = Vec::new();
 
@@ -54,6 +70,29 @@ impl World2D {
         }
     }
 
+    fn get_neighbours(&self, grid_x: i32, grid_y: i32) -> u32 {
+        // checking 3x3 grid
+        let mut counter = 0;
+        for y in -1..2 {
+            for x in -1..2 {
+                if x == 0 && y == 0 {
+                    continue
+                }
+
+                match self.get_cell(grid_x+x, grid_y+y) {
+                    Some(c) => {
+                        if c.state == CellState::ALIVE {
+                            counter += 1;
+                        }
+                    },
+                    None => ()
+                }
+            }
+        }
+
+        counter
+    }
+
     fn cells_x(&self) -> u32 { self.cells.get(0).unwrap().len() as u32 }
     fn cells_y(&self) -> u32 { self.cells.len() as u32 }
 }
@@ -73,7 +112,7 @@ impl Draw for World2D {
 /////////////////
 // CELL STUFF  //
 /////////////////
-#[derive(Copy, Clone)]
+#[derive(PartialEq, Copy, Clone)]
 enum CellState {
     DEAD,
     ALIVE,
@@ -131,6 +170,12 @@ async fn main() {
 mod tests {
 
     use super::*;
+
+    #[test]
+    fn test_get_neighbours_correct_amount() {
+        let grid = World2D::all(3, CellState::ALIVE);
+        assert_eq!(grid.get_neighbours(1, 1), 8);
+    }
 
     #[test]
     fn test_get_cell_not_none() {
