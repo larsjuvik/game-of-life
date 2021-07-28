@@ -1,5 +1,9 @@
-use macroquad::prelude::*;
-use macroquad::rand;
+use rand::random;
+use macroquad::miniquad::conf::Conf;
+use macroquad::shapes::draw_rectangle;
+use macroquad::color::{WHITE, BLACK};
+use macroquad::window::{clear_background, next_frame};
+use macroquad::input::{is_key_pressed, KeyCode};
 
 const WIDTH: u32 = 600;
 const HEIGHT: u32 = 600;
@@ -52,9 +56,9 @@ impl World2D {
             let mut row = Vec::new();
 
             for x in 0..cells_x as i32 {
-                let cell = match rand::gen_range::<u8>(0, 2) {
-                    0 => Cell::new(x, y, CellState::ALIVE),
-                    _ => Cell::new(x, y, CellState::DEAD),
+                let cell = match random() {
+                    false => Cell::new(x, y, CellState::ALIVE),
+                    true => Cell::new(x, y, CellState::DEAD),
                 };
                 row.push(cell);
             }
@@ -175,7 +179,7 @@ impl Draw for Cell {
 #[macroquad::main(config)]
 async fn main() {
 
-    let mut grid = World2D::new(10, 10);
+    let mut grid = World2D::new(100, 100);
 
     loop {
         clear_background(WHITE);
