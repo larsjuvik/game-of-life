@@ -25,11 +25,11 @@ trait Draw {
 /////////////////
 // GRID STUFF  //
 /////////////////
-struct Grid {
+struct World2D {
     cells: Vec<Vec<Cell>>,
 }
-impl Grid {
-    fn new(cells_x: u32, cells_y: u32) -> Grid {
+impl World2D {
+    fn new(cells_x: u32, cells_y: u32) -> World2D {
         let mut cells = Vec::new();
 
         for y in 0..cells_y {
@@ -44,13 +44,13 @@ impl Grid {
             }
             cells.push(row);
         }
-        Grid { cells }
+        World2D { cells }
     }
 
     fn cells_x(&self) -> u32 { self.cells.get(0).unwrap().len() as u32 }
     fn cells_y(&self) -> u32 { self.cells.len() as u32 }
 }
-impl Draw for Grid {
+impl Draw for World2D {
     fn draw(&self, size_px: Dimension) {
         let cell_w = size_px.0 / self.cells_x() as f32;
         let cell_h = size_px.1 / self.cells_y() as f32;
@@ -101,7 +101,7 @@ impl Draw for Cell {
 #[macroquad::main(config)]
 async fn main() {
 
-    let grid = Grid::new(10, 10);
+    let grid = World2D::new(10, 10);
 
     loop {
         clear_background(WHITE);
@@ -127,7 +127,7 @@ mod tests {
 
     #[test]
     fn grid_get_correct_number_cells() {
-        let grid = Grid::new(10, 20);
+        let grid = World2D::new(10, 20);
         assert_eq!(grid.cells_x(), 10);
         assert_eq!(grid.cells_y(), 20);
     }
@@ -135,7 +135,7 @@ mod tests {
     #[test]
     fn grid_get_correct_clone_cells() {
         let dim = (20, 10);
-        let grid = Grid::new(dim.0, dim.1);
+        let grid = World2D::new(dim.0, dim.1);
         let cells_original = &grid.cells;
         let cells_clone = &grid.cells.clone();
 
