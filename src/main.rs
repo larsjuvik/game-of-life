@@ -142,6 +142,18 @@ mod tests {
     }
 
     #[test]
+    fn test_get_cell_correct_coords() {
+        let grid = World2D::new(10, 10);
+        match grid.get_cell(0, 0) {
+            Some(cell) => {
+                assert_eq!(cell.grid_x, 0);
+                assert_eq!(cell.grid_y, 0);
+            },
+            None => panic!("Cell should not be 'None'."),
+        }
+    }
+
+    #[test]
     fn grid_get_correct_number_cells() {
         let grid = World2D::new(10, 20);
         assert_eq!(grid.cells_x(), 10);
