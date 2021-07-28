@@ -37,7 +37,10 @@ impl Cell {
             self.grid_y as f32 * size_px.1,
             size_px.0,
             size_px.1,
-            Color::new(255.0, 0.0, 0.0, 1.0)
+            match &self.state {
+                CellState::DEAD => WHITE,
+                CellState::ALIVE => BLACK,
+            }
         )
     }
 }
@@ -46,7 +49,7 @@ impl Cell {
 #[macroquad::main(config)]
 async fn main() {
 
-    let c1 = Cell::new(3u32, 4u32, CellState::DEAD);
+    let c1 = Cell::new(3u32, 4u32, CellState::ALIVE);
 
     loop {
         clear_background(WHITE);
