@@ -106,6 +106,11 @@ async fn main() {
     loop {
         clear_background(WHITE);
 
+        // input
+        if is_key_pressed(KeyCode::Space) {
+            println!("Space pressed!");
+        }
+
         grid.draw((HEIGHT as f32, WIDTH as f32));
 
         next_frame().await
