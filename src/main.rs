@@ -1,6 +1,6 @@
 use rand::random;
 use macroquad::miniquad::conf::Conf;
-use macroquad::shapes::draw_rectangle;
+use macroquad::shapes::{draw_rectangle, draw_rectangle_lines};
 use macroquad::color::{WHITE, BLACK};
 use macroquad::window::{clear_background, next_frame};
 use macroquad::input::{KeyCode, is_key_down};
@@ -135,6 +135,9 @@ impl World2D {
 }
 impl Draw for World2D {
     fn draw(&self, size_px: Dimension) {
+        // draw border
+        draw_rectangle_lines(-1.0, -1.0, size_px.0+2.0, size_px.1+2.0, 2.0, BLACK);
+
         let cell_w = size_px.0 / self.cells_x() as f32;
         let cell_h = size_px.1 / self.cells_y() as f32;
 
