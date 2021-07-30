@@ -4,6 +4,7 @@ A demo of John Conway´s Game of Life.
 
 ## TODO
 * [ ] Enter custom amount of cells
+
 * [ ] Input custom start pattern
 
 ## Sources
