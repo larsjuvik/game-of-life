@@ -3,9 +3,11 @@ use macroquad::miniquad::conf::Conf;
 use macroquad::shapes::draw_rectangle;
 use macroquad::color::{WHITE, BLACK};
 use macroquad::window::{clear_background, next_frame};
-use macroquad::input::{is_key_pressed, KeyCode};
+use macroquad::input::{KeyCode, is_key_down};
+use macroquad::text::draw_text;
 
-const WIDTH: u32 = 600;
+// WINDOW
+const WIDTH: u32 = 900;
 const HEIGHT: u32 = 600;
 
 fn config() -> Conf {
@@ -31,10 +33,12 @@ trait Draw {
 /////////////////
 struct World2D {
     cells: Vec<Vec<Cell>>,
+    gen: u32,
 }
 impl World2D {
 
     // for testing
+    #[cfg(test)]
     fn all(size: u32, state: CellState) -> World2D {
         let mut cells = Vec::new();
 
@@ -46,7 +50,7 @@ impl World2D {
             }
             cells.push(row);
         }
-        World2D { cells }
+        World2D { cells, gen: 0 }
     }
 
     fn new(cells_x: u32, cells_y: u32) -> World2D {
@@ -64,7 +68,7 @@ impl World2D {
             }
             cells.push(row);
         }
-        World2D { cells }
+        World2D { cells, gen: 0 }
     }
 
     fn set_cell(&mut self, grid_x: i32, grid_y: i32, state: CellState) {
@@ -109,7 +113,7 @@ impl World2D {
 
     // performs one tick; applies the rules of Conway's Game of Life
     fn tick(&mut self) {
-        let old_world = World2D { cells: self.cells.clone() };
+        let old_world = World2D { cells: self.cells.clone(), gen: self.gen };
 
         for row in &old_world.cells {
             for cell in row {
@@ -123,6 +127,7 @@ impl World2D {
                 }
             }
         }
+        self.gen += 1;
     }
 
     fn cells_x(&self) -> u32 { self.cells.get(0).unwrap().len() as u32 }
@@ -179,17 +184,20 @@ impl Draw for Cell {
 #[macroquad::main(config)]
 async fn main() {
 
-    let mut grid = World2D::new(100, 100);
+    const WORLD_SIZE: (f32, f32) = (600.0, 600.0);
+    let mut world = World2D::new(100, 100);
 
     loop {
         clear_background(WHITE);
 
         // input
-        if is_key_pressed(KeyCode::Space) {
-            grid.tick();
+        if is_key_down(KeyCode::Space) {
+            world.tick();
         }
 
-        grid.draw((HEIGHT as f32, WIDTH as f32));
+        world.draw(WORLD_SIZE);
+
+        draw_text(format!("Generation {}", world.gen).as_str(), WORLD_SIZE.0+30.0, 30.0, 40.0, BLACK);
 
         next_frame().await
     }
