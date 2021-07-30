@@ -5,9 +5,11 @@ use macroquad::color::{WHITE, BLACK};
 use macroquad::window::{clear_background, next_frame};
 use macroquad::input::{KeyCode, is_key_down};
 use macroquad::text::draw_text;
+use macroquad::ui::root_ui;
+use macroquad::math::vec2;
 
 // WINDOW
-const WIDTH: u32 = 900;
+const WIDTH: u32 = 1000;
 const HEIGHT: u32 = 600;
 
 fn config() -> Conf {
@@ -186,12 +188,19 @@ impl Draw for Cell {
 
 #[macroquad::main(config)]
 async fn main() {
-
     const WORLD_SIZE: (f32, f32) = (600.0, 600.0);
-    let mut world = World2D::new(100, 100);
+
+    // Mutable variables
+    let mut world = World2D::new(cells_x, cells_y);
 
     loop {
         clear_background(WHITE);
+
+        // UI
+        if root_ui().button(vec2(WORLD_SIZE.0+30.0, 40.0), "Re-Generate") {
+            println!("Generating new world!");
+            world = World2D::new(cells_x, cells_y);
+        };
 
         // input
         if is_key_down(KeyCode::Space) {
@@ -201,6 +210,7 @@ async fn main() {
         world.draw(WORLD_SIZE);
 
         draw_text(format!("Generation {}", world.gen).as_str(), WORLD_SIZE.0+30.0, 30.0, 40.0, BLACK);
+        draw_text("(hold enter to iterate generations)", WORLD_SIZE.0+30.0, 90.0, 20.0, BLACK);
 
         next_frame().await
     }
