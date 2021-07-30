@@ -186,7 +186,6 @@ async fn main() {
 
         // input
         if is_key_pressed(KeyCode::Space) {
-            println!("Space pressed!");
             grid.tick();
         }
 
