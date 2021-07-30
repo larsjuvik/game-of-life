@@ -191,6 +191,8 @@ async fn main() {
     const WORLD_SIZE: (f32, f32) = (600.0, 600.0);
 
     // Mutable variables
+    let cells_x = 100;
+    let cells_y = 100;
     let mut world = World2D::new(cells_x, cells_y);
 
     loop {
