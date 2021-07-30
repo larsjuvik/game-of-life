@@ -212,7 +212,7 @@ async fn main() {
         world.draw(WORLD_SIZE);
 
         draw_text(format!("Generation {}", world.gen).as_str(), WORLD_SIZE.0+30.0, 30.0, 40.0, BLACK);
-        draw_text("(hold enter to iterate generations)", WORLD_SIZE.0+30.0, 90.0, 20.0, BLACK);
+        draw_text("(hold space to iterate generations)", WORLD_SIZE.0+30.0, 90.0, 20.0, BLACK);
 
         next_frame().await
     }
