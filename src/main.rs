@@ -1,4 +1,5 @@
 use rand::random;
+use std::{thread, time::Duration};
 use macroquad::miniquad::conf::Conf;
 use macroquad::shapes::{draw_rectangle, draw_rectangle_lines};
 use macroquad::color::{WHITE, BLACK};
@@ -213,6 +214,9 @@ async fn main() {
 
         draw_text(format!("Generation {}", world.gen).as_str(), WORLD_SIZE.0+30.0, 30.0, 40.0, BLACK);
         draw_text("(hold space to iterate generations)", WORLD_SIZE.0+30.0, 90.0, 20.0, BLACK);
+
+	// add small delay to see better what´s going on
+	thread::sleep(Duration::from_millis(50));
 
         next_frame().await
     }
