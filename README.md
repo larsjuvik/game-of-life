@@ -1,4 +1,5 @@
 # Game of Life
+![Static Badge](https://img.shields.io/badge/using-Rust-orange)
 
 A demo of John Conway´s Game of Life.
 
